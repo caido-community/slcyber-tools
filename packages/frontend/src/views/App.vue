@@ -60,7 +60,10 @@ const uploadInternalIPs = async () => {
     return;
   }
 
-  const result = await sdk.backend.uploadInternalIPsToFiles(scanId.value);
+  const result = await sdk.backend.uploadInternalIPsToFiles(
+    scanId.value,
+    prependProtocol.value,
+  );
 
   if (result.kind === "Error") {
     sdk.window.showToast(result.error, { variant: "error" });
@@ -78,7 +81,10 @@ const uploadExternalIPs = async () => {
     return;
   }
 
-  const result = await sdk.backend.uploadExternalIPsToFiles(scanId.value);
+  const result = await sdk.backend.uploadExternalIPsToFiles(
+    scanId.value,
+    prependProtocol.value,
+  );
 
   if (result.kind === "Error") {
     sdk.window.showToast(result.error, { variant: "error" });
@@ -130,7 +136,10 @@ const downloadInternalIPs = async () => {
     return;
   }
 
-  const result = await sdk.backend.downloadInternalIPs(scanId.value);
+  const result = await sdk.backend.downloadInternalIPs(
+    scanId.value,
+    prependProtocol.value,
+  );
 
   if (result.kind === "Error") {
     sdk.window.showToast(result.error, { variant: "error" });
@@ -149,7 +158,10 @@ const downloadExternalIPs = async () => {
     return;
   }
 
-  const result = await sdk.backend.downloadExternalIPs(scanId.value);
+  const result = await sdk.backend.downloadExternalIPs(
+    scanId.value,
+    prependProtocol.value,
+  );
 
   if (result.kind === "Error") {
     sdk.window.showToast(result.error, { variant: "error" });

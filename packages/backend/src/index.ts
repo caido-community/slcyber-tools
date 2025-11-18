@@ -205,9 +205,10 @@ function getScanResultsAPI(
 async function uploadInternalIPsToFilesAPI(
   sdk: SDK<API, BackendEvents>,
   scanId: string,
+  prependProtocol: boolean,
 ): Promise<Result<string>> {
   sdk.console.log(
-    `[SURF - API] uploadInternalIPsToFiles called for scan ${scanId}`,
+    `[SURF - API] uploadInternalIPsToFiles called for scan ${scanId}, prependProtocol=${prependProtocol}`,
   );
 
   try {
@@ -222,15 +223,29 @@ async function uploadInternalIPsToFilesAPI(
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const fileName = `surf-internal-${timestamp}.txt`;
-    const content = results.internal.join("\n");
 
-    // const file = await sdk.hostedFile.create({
-    //   name: fileName,
-    //   content: content,
-    // });
+    let content: string;
+    if (prependProtocol) {
+      const urls: string[] = [];
+      for (const host of results.internal) {
+        urls.push(`https://${host}`);
+        urls.push(`http://${host}`);
+      }
+      content = urls.join("\n");
+    } else {
+      content = results.internal.join("\n");
+    }
 
+    const file = await sdk.hostedFile.create({
+      name: fileName,
+      content: content,
+    });
+
+    const itemCount = prependProtocol
+      ? results.internal.length * 2
+      : results.internal.length;
     sdk.console.log(
-      `[SURF - API] Successfully created internal IPs file: ${file.name} (${results.internal.length} hosts)`,
+      `[SURF - API] Successfully created internal IPs file: ${file.name} (${itemCount} ${prependProtocol ? "URLs" : "hosts"})`,
     );
 
     return { kind: "Ok", value: file.name };
@@ -248,9 +263,10 @@ async function uploadInternalIPsToFilesAPI(
 async function uploadExternalIPsToFilesAPI(
   sdk: SDK<API, BackendEvents>,
   scanId: string,
+  prependProtocol: boolean,
 ): Promise<Result<string>> {
   sdk.console.log(
-    `[SURF - API] uploadExternalIPsToFiles called for scan ${scanId}`,
+    `[SURF - API] uploadExternalIPsToFiles called for scan ${scanId}, prependProtocol=${prependProtocol}`,
   );
 
   try {
@@ -265,15 +281,29 @@ async function uploadExternalIPsToFilesAPI(
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const fileName = `surf-external-${timestamp}.txt`;
-    const content = results.external.join("\n");
+
+    let content: string;
+    if (prependProtocol) {
+      const urls: string[] = [];
+      for (const host of results.external) {
+        urls.push(`https://${host}`);
+        urls.push(`http://${host}`);
+      }
+      content = urls.join("\n");
+    } else {
+      content = results.external.join("\n");
+    }
 
     const file = await sdk.hostedFile.create({
       name: fileName,
       content: content,
     });
 
+    const itemCount = prependProtocol
+      ? results.external.length * 2
+      : results.external.length;
     sdk.console.log(
-      `[SURF - API] Successfully created external IPs file: ${file.name} (${results.external.length} hosts)`,
+      `[SURF - API] Successfully created external IPs file: ${file.name} (${itemCount} ${prependProtocol ? "URLs" : "hosts"})`,
     );
 
     return { kind: "Ok", value: file.name };
@@ -349,9 +379,10 @@ async function uploadCombinedWordlistToFilesAPI(
 function downloadInternalIPsAPI(
   sdk: SDK<API, BackendEvents>,
   scanId: string,
+  prependProtocol: boolean,
 ): Result<string> {
   sdk.console.log(
-    `[SURF - API] downloadInternalIPs called for scan ${scanId}`,
+    `[SURF - API] downloadInternalIPs called for scan ${scanId}, prependProtocol=${prependProtocol}`,
   );
 
   try {
@@ -364,7 +395,18 @@ function downloadInternalIPsAPI(
       return { kind: "Error", error: "Scan not found or not complete" };
     }
 
-    const content = results.internal.join("\n");
+    let content: string;
+    if (prependProtocol) {
+      const urls: string[] = [];
+      for (const host of results.internal) {
+        urls.push(`https://${host}`);
+        urls.push(`http://${host}`);
+      }
+      content = urls.join("\n");
+    } else {
+      content = results.internal.join("\n");
+    }
+
     return { kind: "Ok", value: content };
   } catch (error) {
     sdk.console.log(
@@ -380,9 +422,10 @@ function downloadInternalIPsAPI(
 function downloadExternalIPsAPI(
   sdk: SDK<API, BackendEvents>,
   scanId: string,
+  prependProtocol: boolean,
 ): Result<string> {
   sdk.console.log(
-    `[SURF - API] downloadExternalIPs called for scan ${scanId}`,
+    `[SURF - API] downloadExternalIPs called for scan ${scanId}, prependProtocol=${prependProtocol}`,
   );
 
   try {
@@ -395,7 +438,18 @@ function downloadExternalIPsAPI(
       return { kind: "Error", error: "Scan not found or not complete" };
     }
 
-    const content = results.external.join("\n");
+    let content: string;
+    if (prependProtocol) {
+      const urls: string[] = [];
+      for (const host of results.external) {
+        urls.push(`https://${host}`);
+        urls.push(`http://${host}`);
+      }
+      content = urls.join("\n");
+    } else {
+      content = results.external.join("\n");
+    }
+
     return { kind: "Ok", value: content };
   } catch (error) {
     sdk.console.log(
