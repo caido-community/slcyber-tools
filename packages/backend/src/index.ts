@@ -14,13 +14,13 @@ export type Result<T> =
 
 // Backend events
 export type BackendEvents = DefineEvents<{
-  "scan-progress": {
+  "scan-progress": (data: {
     scanId: string;
     current: number;
     total: number;
     currentDomains: string[];
-  };
-  "scan-complete": {
+  }) => void;
+  "scan-complete": (data: {
     scanId: string;
     results: {
       internalCount: number;
@@ -28,7 +28,7 @@ export type BackendEvents = DefineEvents<{
       combinedCount: number;
       totalDomains: number;
     };
-  };
+  }) => void;
 }>;
 
 // API function implementations
