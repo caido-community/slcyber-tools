@@ -11,7 +11,7 @@
     "vue": "3.4.37"
   },
   "devDependencies": {
-    "@caido/sdk-backend": "^0.53.1",
+    "@caido/sdk-backend": "^0.53.2-beta.0",
     "@caido/sdk-frontend": "^0.53.1",
     "@codemirror/view": "6.28.1",
     "backend": "workspace:*",
