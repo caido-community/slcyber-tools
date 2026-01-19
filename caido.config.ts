@@ -12,7 +12,7 @@ export default defineConfig({
   id,
   name: "SLCyber Tools",
   description: "A collection of tools from SLCyber including Surf for SSRF testing and SLCyber custom wordlists.",
-  version: "0.0.2",
+  version: "0.1.0",
   author: {
     name: "Caido Labs Inc.",
     email: "dev@caido.io",
